@@ -1,0 +1,534 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KẾ HOẠCH BẢO DƯỠNG PHỤ TRỢ</title>
+
+<style>
+:root {
+  --blue: #2563eb;
+  --green: #16a34a;
+  --red: #dc2626;
+  --text: #1f2937;
+  --muted: #64748b;
+  --border: #e2e8f0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background: #f8fafc;
+  font-size: 14px;
+}
+
+header {
+  padding: 16px;
+  text-align: center;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  min-height: calc(100vh - 58px);
+}
+
+.sidebar {
+  padding: 16px 10px;
+  background: white;
+  border-right: 1px solid var(--border);
+}
+
+.side-heading {
+  margin: 4px 8px 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.side-meta {
+  margin: 0 8px 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.toc {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toc-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 9px 7px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.toc-item:hover {
+  background: #f1f5f9;
+}
+
+.toc-item.active {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+  font-weight: bold;
+}
+
+.toc-item.skipped {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.toc-num {
+  flex: 0 0 55px;
+  font-weight: bold;
+}
+
+.toc-url {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.status-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.status-icon.skipped {
+  color: var(--red);
+}
+
+.status-icon.current {
+  color: var(--blue);
+}
+
+.status-icon.pending {
+  color: #94a3b8;
+}
+
+.status-icon.done {
+  width: 22px;
+  height: 22px;
+}
+
+main {
+  padding: 35px;
+}
+
+.content {
+  max-width: 900px;
+  margin: auto;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--muted);
+}
+
+.card {
+  padding: 28px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 3px 12px #0f172a0a;
+}
+
+.badge {
+  display: inline-block;
+  padding: 6px 9px;
+  border-radius: 5px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+h1 {
+  margin: 18px 0 12px;
+  font-size: 25px;
+}
+
+.url {
+  display: block;
+  margin-bottom: 22px;
+  color: var(--blue);
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+button.action {
+  padding: 10px 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--text);
+}
+
+button.open {
+  color: white;
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.note {
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.empty {
+  padding: 22px 5px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 650px) {
+  header h2 {
+    font-size: 16px;
+  }
+
+  .layout {
+    grid-template-columns: 125px minmax(0, 1fr);
+  }
+
+  .sidebar {
+    padding: 10px 4px;
+  }
+
+  .side-heading,
+  .side-meta {
+    margin-left: 4px;
+    margin-right: 4px;
+    font-size: 10px;
+  }
+
+  .toc-item {
+    flex-wrap: wrap;
+    gap: 3px;
+    padding: 8px 3px;
+  }
+
+  .toc-num {
+    flex-basis: 50px;
+  }
+
+  .toc-url {
+    order: 3;
+    flex-basis: 100%;
+    font-size: 10px;
+  }
+
+  main {
+    padding: 12px 8px;
+  }
+
+  .card {
+    padding: 13px 10px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .url {
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>KẾ HOẠCH BẢO DƯỠNG PHỤ TRỢ</h2>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="side-heading">MỤC LỤC KHBD</div>
+    <div class="side-meta" id="sideMeta"></div>
+    <nav class="toc" id="toc"></nav>
+  </aside>
+
+  <main>
+    <div class="content">
+      <p class="eyebrow">KHBD ĐANG CHỌN</p>
+      <section class="card" id="card"></section>
+    </div>
+  </main>
+
+</div>
+
+<script>
+/*
+  SỬA DANH SÁCH KHBD TẠI ĐÂY.
+  Thêm mỗi URL theo mẫu:
+  { url: "https://example.com/khbd4" },
+  STT tự tăng theo thứ tự.
+*/
+
+const DEFAULT_LINKS = [
+  { url: "https://example.com" },
+  { url: "https://www.wikipedia.org" },
+  { url: "https://www.google.com" },
+  { url: "https://www.facebook.com" },
+  { url: "https://www.youtube.com" }
+];
+
+// Mỗi lần tải trang, tiến độ luôn bắt đầu lại từ đầu.
+let links = DEFAULT_LINKS.map(item => ({
+  url: item.url,
+  done: false,
+  skipped: false
+}));
+
+let currentIndex = 0;
+
+const toc = document.getElementById("toc");
+const sideMeta = document.getElementById("sideMeta");
+const card = document.getElementById("card");
+
+function element(tag, className, text) {
+  const node = document.createElement(tag);
+
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+
+  return node;
+}
+
+// Icon tích xanh hình tròn giống hình mẫu.
+function makeStatus(item, index) {
+  if (item.done) {
+    const svgNS = "http://www.w3.org/2000/svg";
+
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", "0 0 100 100");
+    svg.setAttribute("width", "22");
+    svg.setAttribute("height", "22");
+    svg.setAttribute("class", "status-icon done");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Đã mở");
+
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("cx", "50");
+    circle.setAttribute("cy", "50");
+    circle.setAttribute("r", "48");
+    circle.setAttribute("fill", "#16a34a");
+
+    const check = document.createElementNS(svgNS, "path");
+    check.setAttribute("d", "M24 51 L42 68 L77 32");
+    check.setAttribute("fill", "none");
+    check.setAttribute("stroke", "#fff");
+    check.setAttribute("stroke-width", "11");
+    check.setAttribute("stroke-linecap", "square");
+    check.setAttribute("stroke-linejoin", "miter");
+
+    svg.append(circle, check);
+    return svg;
+  }
+
+  if (item.skipped) {
+    return element("span", "status-icon skipped", "✕");
+  }
+
+  if (index === currentIndex) {
+    return element("span", "status-icon current", "●");
+  }
+
+  return element("span", "status-icon pending", "○");
+}
+
+// Mở KHBD: tích xanh mục hiện tại, tô đỏ các mục trước chưa mở.
+function openCurrent() {
+  const item = links[currentIndex];
+
+  if (!item) return;
+
+  window.open(item.url, "_blank", "noopener,noreferrer");
+
+  item.done = true;
+  item.skipped = false;
+
+  for (let i = 0; i < currentIndex; i++) {
+    if (!links[i].done) {
+      links[i].skipped = true;
+    }
+  }
+
+  render();
+}
+
+// Chuyển sang KHBD kế tiếp, không đổi trạng thái icon.
+function nextKHBD() {
+  if (currentIndex < links.length - 1) {
+    currentIndex++;
+    render();
+  } else if (links.length > 0) {
+    alert("Đây là KHBD cuối cùng.");
+  }
+}
+
+function render() {
+  toc.replaceChildren();
+  card.replaceChildren();
+
+  if (links.length === 0) {
+    sideMeta.textContent = "0 KHBD";
+    card.append(element("p", "empty", "Chưa có KHBD."));
+    return;
+  }
+
+  sideMeta.textContent =
+    `${currentIndex + 1}/${links.length} • đang chọn`;
+
+  // Mục lục bên trái: chọn bất kỳ KHBD nào.
+  links.forEach((item, index) => {
+    const button = element(
+      "button",
+      "toc-item" +
+        (index === currentIndex ? " active" : "") +
+        (item.skipped && !item.done ? " skipped" : "")
+    );
+
+    button.type = "button";
+    button.title = item.url;
+
+    button.append(
+      element("span", "toc-num", `KHBD ${index + 1}`),
+      element("span", "toc-url", item.url),
+      makeStatus(item, index)
+    );
+
+    button.addEventListener("click", () => {
+      currentIndex = index;
+      render();
+    });
+
+    toc.append(button);
+  });
+
+  // Hiển thị KHBD đang chọn.
+  const item = links[currentIndex];
+
+  card.append(
+    element(
+      "span",
+      "badge",
+      `KHBD ${currentIndex + 1} / ${links.length}` +
+        (item.done ? " • ĐÃ MỞ" : "")
+    )
+  );
+
+  card.append(
+    element("h1", "", `KHBD số ${currentIndex + 1}`)
+  );
+
+  const anchor = element("a", "url", item.url);
+
+  anchor.href = item.url;
+  anchor.target = "_blank";
+  anchor.rel = "noopener noreferrer";
+
+  // Bấm trực tiếp URL cũng đánh dấu đã mở.
+  anchor.addEventListener("click", () => {
+    item.done = true;
+    item.skipped = false;
+
+    for (let i = 0; i < currentIndex; i++) {
+      if (!links[i].done) {
+        links[i].skipped = true;
+      }
+    }
+
+    setTimeout(render, 100);
+  });
+
+  card.append(anchor);
+
+  const actions = element("div", "actions");
+
+  const openButton = element(
+    "button",
+    "action open",
+    "↗ Mở KHBD"
+  );
+
+  openButton.addEventListener("click", openCurrent);
+
+  const nextButton = element(
+    "button",
+    "action",
+    "KHBD tiếp theo →"
+  );
+
+  nextButton.disabled = currentIndex >= links.length - 1;
+  nextButton.addEventListener("click", nextKHBD);
+
+  actions.append(openButton, nextButton);
+  card.append(actions);
+
+  const statusText = item.done
+    ? "✓ Đã mở KHBD này"
+    : item.skipped
+      ? "✕ KHBD này chưa mở và đã bị bỏ qua"
+      : "○ Chưa mở KHBD này";
+
+  card.append(
+    element("p", "note", "Trạng thái: " + statusText)
+  );
+}
+
+// Không lưu tiến độ. Tải lại trang sẽ bắt đầu từ đầu.
+render();
+</script>
+
+</body>
+</html>
